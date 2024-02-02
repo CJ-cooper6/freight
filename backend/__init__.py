@@ -15,8 +15,10 @@ def create_app():
     config_file_path = get_config_file_path()
     config_provider.load(config_file_path)
     database.init_app(app)
+    _register_blueprints(app)
     with app.app_context():
         db.create_all()
+
 
     return app
 
@@ -25,3 +27,9 @@ def get_config_file_path():
     from utils import get_project_root
     config_file = os.path.join(get_project_root(), f"conf/config.yml")
     return config_file
+
+
+def _register_blueprints(app):
+    from backend.api import bp as api
+
+    app.register_blueprint(api, url_prefix="/api")
