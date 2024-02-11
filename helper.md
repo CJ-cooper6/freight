@@ -1,4 +1,5 @@
 source venv/Scripts/activate
+pyenv activate freight
 
 pip freeze > requirement.txt
 pip install -r requirements.txt

@@ -51,6 +51,7 @@ uwsgi_temp
 .fontcustom-manifest.json
 
 .vscode
+/conf/config.yml
 /conf/local.py
 /conf/config_local.yml
 .python-version

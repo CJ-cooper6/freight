@@ -23,4 +23,4 @@ def get_connection_url(config):
     host = config["HOST"]
     port = config["PORT"]
     database = config["DB"]
-    return "mysql+mysqldb://{}{}@{}:{}/{}?charset=utf8".format(user, password, host, port, database)
+    return "mysql+pymysql://{}{}@{}:{}/{}?charset=utf8".format(user, password, host, port, database)
