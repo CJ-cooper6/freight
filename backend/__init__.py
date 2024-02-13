@@ -1,5 +1,6 @@
 import os
 from flask import Flask
+from flask_cors import CORS
 from backend import database
 from backend.database import db
 from .configuration import config_provider
@@ -12,6 +13,7 @@ from .freight import model
 def create_app():
     app = Flask(__name__)
 
+    CORS(app, supports_credentials=True)
     config_file_path = get_config_file_path()
     config_provider.load(config_file_path)
     database.init_app(app)

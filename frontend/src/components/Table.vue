@@ -1,82 +1,166 @@
 <template>
-  <a-table :columns="columns" :data-source="dataSource" bordered>
-    <template #bodyCell="{ column, text, record }">
-      <template v-if="['name', 'age', 'address'].includes(column.dataIndex)">
-        <div>
-          <a-input
-            v-if="editableData[record.key]"
-            v-model:value="editableData[record.key][column.dataIndex]"
-            style="margin: -5px 0"
-          />
-          <template v-else>
-            {{ text }}
-          </template>
-        </div>
+  <div>
+    <a-table :columns="columns" :data-source="dataSource" bordered>
+      <template #bodyCell="{ column, text, record }">
+        <template
+          v-if="
+            [
+              'date',
+              'number',
+              'name',
+              'piece',
+              'cube',
+              'piece',
+              'weight',
+              'imprest',
+              'package_number',
+              'room',
+            ].includes(column.dataIndex)
+          "
+        >
+          <div>
+            <a-input
+              v-if="editableData[record.id]"
+              v-model:value="editableData[record.id][column.dataIndex]"
+              style="margin: -5px 0"
+            />
+            <template v-else>
+              {{ text }}
+            </template>
+          </div>
+        </template>
+        <template v-else-if="column.dataIndex === 'operation'">
+          <div class="editable-row-operations">
+            <span v-if="editableData[record.id]">
+              <a-typography-link @click="save(record.id)"
+                >保存</a-typography-link
+              >
+              <a-typography-link title="确定取消?" @click="cancel(record.id)">
+                <a>取消</a>
+              </a-typography-link>
+            </span>
+            <span v-else>
+              <a @click="edit(record.id)">编辑</a>
+            </span>
+          </div>
+        </template>
       </template>
-      <template v-else-if="column.dataIndex === 'operation'">
-        <div class="editable-row-operations">
-          <span v-if="editableData[record.key]">
-            <a-typography-link @click="save(record.key)">Save</a-typography-link>
-            <a-popconfirm title="Sure to cancel?" @confirm="cancel(record.key)">
-              <a>Cancel</a>
-            </a-popconfirm>
-          </span>
-          <span v-else>
-            <a @click="edit(record.key)">Edit</a>
-          </span>
-        </div>
-      </template>
-    </template>
-  </a-table>
+    </a-table>
+    <a-button
+      class="editable-add-btn"
+      style="margin-bottom: 8px"
+      @click="handleAdd"
+      >Add</a-button
+    >
+  </div>
 </template>
 <script setup>
-import { cloneDeep } from 'lodash-es';
-import { reactive, ref } from 'vue';
+import { cloneDeep } from "lodash-es";
+import { reactive, ref, onMounted } from "vue";
+import Service from "../service";
+
 const columns = [
   {
-    title: 'name',
-    dataIndex: 'name',
-    width: '25%',
+    title: "日期",
+    dataIndex: "date",
+    width: '10%',
   },
   {
-    title: 'age',
-    dataIndex: 'age',
-    width: '15%',
+    title: "货号",
+    dataIndex: "number",
+    width: '10%',
   },
   {
-    title: 'address',
-    dataIndex: 'address',
-    width: '40%',
+    title: "品名",
+    dataIndex: "name",
+    width: '10%',
   },
   {
-    title: 'operation',
-    dataIndex: 'operation',
+    title: "件数",
+    dataIndex: "piece",
+    width: '10%',
+  },
+  {
+    title: "立方",
+    dataIndex: "cube",
+    width: '10%',
+  },
+  {
+    title: "重量",
+    dataIndex: "weight",
+    width: '10%',
+  },
+  {
+    title: "垫付款",
+    dataIndex: "imprest",
+    width: '10%',
+  },
+  {
+    title: "包装数",
+    dataIndex: "package_number",
+    width: '10%',
+  },
+  {
+    title: "房间",
+    dataIndex: "room",
+    width: '10%',
+  },
+  {
+    title: "操作",
+    dataIndex: "operation",
   },
 ];
-const data = [];
-for (let i = 0; i < 100; i++) {
-  data.push({
-    key: i.toString(),
-    name: `Edrward ${i}`,
-    age: 32,
-    address: `London Park no. ${i}`,
-  });
-}
+
+
+const data = ref([]);
+const total = ref(0);
+const pagination = reactive({
+  pageSize: 10, // 每页显示的数量
+  currentPage: 1, // 当前页码
+});
+
 const dataSource = ref(data);
 const editableData = reactive({});
-const edit = key => {
-  editableData[key] = cloneDeep(dataSource.value.filter(item => key === item.key)[0]);
+
+const fetchData = () => {
+  Service.getData(pagination.pageSize, pagination.currentPage)
+    .then((response) => {
+      data.value = response.data.freight_items;
+      total.value = data.total;
+    })
+    .catch((error) => {
+      console.error("获取失败:", error);
+    });
 };
-const save = key => {
-  Object.assign(dataSource.value.filter(item => key === item.key)[0], editableData[key]);
-  delete editableData[key];
+
+const edit = (id) => {
+
+  editableData[id] = cloneDeep(
+    dataSource.value.filter((item) => id === item.id)[0]
+  );
+  console.log(editableData[1]['number'])
+
 };
-const cancel = key => {
-  delete editableData[key];
+const save = (id) => {
+  Object.assign(
+    dataSource.value.filter((item) => id === item.id)[0],
+    editableData[id]
+  );
+  delete editableData[id];
 };
+const cancel = (id) => {
+  delete editableData[id];
+};
+
+onMounted(() => {
+  fetchData();
+});
 </script>
 <style scoped>
 .editable-row-operations a {
   margin-right: 8px;
+}
+.editable-add-btn {
+  margin-bottom: 8px;
 }
 </style>
