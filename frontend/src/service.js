@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const apiBaseUrl = 'http://localhost:5000/api'
+const apiBaseUrl = '/api'
 
 axios.defaults.withCredentials = true;
 
@@ -13,4 +13,9 @@ export default {
           },
         });
       },
+    
+    saveData(id, data) {
+      console.log(data)
+      return axios.put(`${apiBaseUrl}/freight/${id}`,data);
+    },
 };

@@ -1,4 +1,5 @@
 from backend.freight.repertory import get_freight_all, get_freight_items_by_page
+from backend.freight.service import update_freight_with_data
 from backend.response_helper import success, bad_request_with_data
 from backend.api import bp
 from backend.request_helper import get_pagination
@@ -13,10 +14,10 @@ def get_freight():
     return success({"total": items.total, "freight_items": serialized_items})
 
 
-# @bp.route("/freight", methods=["PUT"])
-# def update_freight():
-#     data = request.get_json()
-#     updated_todo = update_todo(todo_id, title=data.get("title"), completed=data.get("completed"))
-#     if updated_todo:
-#         return success({"updated_todo": updated_todo})
-#     return bad_request_with_data({"error": "Todo not found"}, 404)
+@bp.route("/freight/<int:freight_id>", methods=["PUT"])
+def update_freight(freight_id):
+    data = request.get_json()
+    print(data)
+    if update_freight_with_data(freight_id, data):
+        return success({"message": "ok"})
+    return bad_request_with_data({"error": "Freight update failed"}, 404)

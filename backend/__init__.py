@@ -35,3 +35,4 @@ def _register_blueprints(app):
     from backend.api import bp as api
 
     app.register_blueprint(api, url_prefix="/api")
+

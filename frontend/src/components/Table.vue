@@ -63,47 +63,47 @@ const columns = [
   {
     title: "日期",
     dataIndex: "date",
-    width: '10%',
+    width: "10%",
   },
   {
     title: "货号",
     dataIndex: "number",
-    width: '10%',
+    width: "10%",
   },
   {
     title: "品名",
     dataIndex: "name",
-    width: '10%',
+    width: "10%",
   },
   {
     title: "件数",
     dataIndex: "piece",
-    width: '10%',
+    width: "10%",
   },
   {
     title: "立方",
     dataIndex: "cube",
-    width: '10%',
+    width: "10%",
   },
   {
     title: "重量",
     dataIndex: "weight",
-    width: '10%',
+    width: "10%",
   },
   {
     title: "垫付款",
     dataIndex: "imprest",
-    width: '10%',
+    width: "10%",
   },
   {
     title: "包装数",
     dataIndex: "package_number",
-    width: '10%',
+    width: "10%",
   },
   {
     title: "房间",
     dataIndex: "room",
-    width: '10%',
+    width: "10%",
   },
   {
     title: "操作",
@@ -111,16 +111,15 @@ const columns = [
   },
 ];
 
-
 const data = ref([]);
+const dataSource = ref(data);
+const editableData = reactive({});
+
 const total = ref(0);
 const pagination = reactive({
   pageSize: 10, // 每页显示的数量
   currentPage: 1, // 当前页码
 });
-
-const dataSource = ref(data);
-const editableData = reactive({});
 
 const fetchData = () => {
   Service.getData(pagination.pageSize, pagination.currentPage)
@@ -134,20 +133,21 @@ const fetchData = () => {
 };
 
 const edit = (id) => {
-
   editableData[id] = cloneDeep(
     dataSource.value.filter((item) => id === item.id)[0]
   );
-  console.log(editableData[1]['number'])
+};
 
-};
 const save = (id) => {
-  Object.assign(
-    dataSource.value.filter((item) => id === item.id)[0],
-    editableData[id]
-  );
-  delete editableData[id];
+  Service.saveData(id, editableData[id]).then((response) => {
+    Object.assign(
+      dataSource.value.filter((item) => id === item.id)[0],
+      editableData[id]
+    );
+    delete editableData[id];
+  });
 };
+
 const cancel = (id) => {
   delete editableData[id];
 };
