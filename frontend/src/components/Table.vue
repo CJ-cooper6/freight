@@ -71,7 +71,7 @@
 </template>
 <script setup>
 import { cloneDeep } from "lodash-es";
-import { reactive, ref, onMounted } from "vue";
+import { reactive, ref, onMounted, computed } from "vue";
 import Service from "../service";
 
 const columns = [
@@ -136,11 +136,12 @@ const pagination = reactive({
   total: 0,
 });
 
+const first_id = computed(() => dataSource.value[0] ? dataSource.value[0].id + 1 : 0);
+
 const fetchData = () => {
   Service.getData(pagination.pageSize, pagination.current)
     .then((response) => {
       data.value = response.data.freight_items;
-      console.log(data.value.total);
       pagination.total = response.data.total;
     })
     .catch((error) => {
@@ -161,11 +162,23 @@ const save = (id) => {
       editableData[id]
     );
     delete editableData[id];
+    fetchData();
   });
 };
 
 const cancel = (id) => {
   delete editableData[id];
+};
+
+const handleAdd = () => {
+  const new_id = first_id.value
+  const newData = {
+    id : new_id
+  };
+  dataSource.value.unshift(newData);
+  editableData[new_id] = cloneDeep(
+   newData
+  );
 };
 
 onMounted(() => {

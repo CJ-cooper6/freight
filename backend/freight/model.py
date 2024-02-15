@@ -7,11 +7,11 @@ class Freight(db.Model):
     date = db.Column(db.String(255))  #日期
     number = db.Column(db.String(255))  #货号
     name = db.Column(db.String(255))  # 品名
-    piece = db.Column(db.Integer)  # 件数
+    piece = db.Column(db.String(255))  # 件数
     cube = db.Column(db.String(255))  # 立方
     weight = db.Column(db.String(255))  # 重量
     imprest = db.Column(db.String(255))  # 垫付款
-    package_number = db.Column(db.Integer)  # 包装数
+    package_number = db.Column(db.String(255))  # 包装数
     room = db.Column(db.String(255))  # 房间
     deleted = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)

@@ -20,4 +20,5 @@ def update_freight(freight_id):
     print(data)
     if update_freight_with_data(freight_id, data):
         return success({"message": "ok"})
+
     return bad_request_with_data({"error": "Freight update failed"}, 404)
