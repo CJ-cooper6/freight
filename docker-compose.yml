@@ -1,19 +1,14 @@
-version: '1'
+version: '3.8'
 services:
-  frontend:
-    image: "freight-frontend"
+  freight-frontend:
+    build: ./frontend  
     ports:
       - "5173:5173"
-    networks:
-      - mynetwork
-
-  backend:
-    image: "freight"
+    depends_on:
+      - freight 
+  freight:
+    build: ./  
     ports:
-      - "5000:5000"
-    networks:
-      - mynetwork
-
-networks:
-  mynetwork:
-    driver: bridge
+      - "5000:5000" 
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
