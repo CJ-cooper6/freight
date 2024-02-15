@@ -52,6 +52,14 @@
             </span>
             <span v-else>
               <a @click="edit(record.id)">编辑</a>
+              <a-popconfirm
+                title="确定删除?"
+                ok-text="确定"
+                cancel-text="取消"
+                @confirm="onDelete(record.id)"
+              >
+                <a>删除</a>
+              </a-popconfirm>
             </span>
           </div>
         </template>
@@ -136,7 +144,9 @@ const pagination = reactive({
   total: 0,
 });
 
-const first_id = computed(() => dataSource.value[0] ? dataSource.value[0].id + 1 : 0);
+const first_id = computed(() =>
+  dataSource.value[0] ? dataSource.value[0].id + 1 : 0
+);
 
 const fetchData = () => {
   Service.getData(pagination.pageSize, pagination.current)
@@ -161,7 +171,13 @@ const save = (id) => {
       dataSource.value.filter((item) => id === item.id)[0],
       editableData[id]
     );
-    delete editableData[id];
+
+    //取消所有编辑状态
+    const keys = Object.keys(editableData);
+    keys.forEach((key) => {
+      delete editableData[key];
+    });
+
     fetchData();
   });
 };
@@ -171,14 +187,18 @@ const cancel = (id) => {
 };
 
 const handleAdd = () => {
-  const new_id = first_id.value
+  const new_id = first_id.value;
   const newData = {
-    id : new_id
+    id: new_id,
   };
   dataSource.value.unshift(newData);
-  editableData[new_id] = cloneDeep(
-   newData
-  );
+  editableData[new_id] = cloneDeep(newData);
+};
+
+const onDelete = (id) => {
+  Service.deleteData(id).then((response) => {
+    fetchData();
+  });
 };
 
 onMounted(() => {

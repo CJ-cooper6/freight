@@ -15,7 +15,10 @@ export default {
       },
     
     saveData(id, data) {
-      console.log(data)
       return axios.put(`${apiBaseUrl}/freight/${id}`,data);
     },
+
+    deleteData(id) {
+      return axios.delete(`${apiBaseUrl}/freight/${id}`);
+    }
 };

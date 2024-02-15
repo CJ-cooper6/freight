@@ -1,5 +1,5 @@
 from backend.freight.repertory import get_freight_all, get_freight_items_by_page
-from backend.freight.service import update_freight_with_data
+from backend.freight.service import update_freight_with_data, delete_freight_with_id
 from backend.response_helper import success, bad_request_with_data
 from backend.api import bp
 from backend.request_helper import get_pagination
@@ -22,3 +22,11 @@ def update_freight(freight_id):
         return success({"message": "ok"})
 
     return bad_request_with_data({"error": "Freight update failed"}, 404)
+
+
+@bp.route("/freight/<int:freight_id>", methods=["DELETE"])
+def delete_freight(freight_id):
+    if delete_freight_with_id(freight_id):
+        return success({"message": "ok"})
+
+    return bad_request_with_data({"error": "delete freight failed"}, 404)

@@ -11,7 +11,7 @@ def get_freight_items_by_page(current_page, page_size):
 
 
 def get_freight_by_id(id):
-    return Freight.query.filter(Freight.id == id).first()
+    return Freight.query.filter(Freight.id == id, Freight.deleted == False).first()
 
 def update_freight(id, data):
     return Freight.query.filter(Freight.id == id).update(data)

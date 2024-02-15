@@ -37,3 +37,12 @@ def update_freight_with_data(freight_id, data):
             
     db.session.commit()
     return True
+
+def delete_freight_with_id(freight_id):
+    freight = get_freight_by_id(freight_id)
+    if freight:
+        freight.deleted = True
+        freight.update_at = datetime.utcnow()
+        db.session.commit()
+        return True
+    return False
