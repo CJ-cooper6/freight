@@ -4,7 +4,16 @@ services:
     image: "freight-frontend"
     ports:
       - "5173:5173"
+    networks:
+      - mynetwork
+
   backend:
     image: "freight"
     ports:
       - "5000:5000"
+    networks:
+      - mynetwork
+
+networks:
+  mynetwork:
+    driver: bridge

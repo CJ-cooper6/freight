@@ -1,12 +1,13 @@
-FROM node:16.10.0-alpine as build
+FROM node:16-slim as builder
 WORKDIR /app
 COPY package*.json ./
 
-RUN npm config set registry https://registry.npm.taobao.org/
-RUN npm install --production
+RUN npm cache clean --force
+RUN npm install --loglevel=verbose
 
 COPY . .
 
 RUN npm run build
+EXPOSE 5173
 
 CMD [ "npm", "run", "dev" ]
