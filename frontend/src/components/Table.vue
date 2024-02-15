@@ -4,12 +4,14 @@
       class="editable-add-btn"
       style="margin-bottom: 8px"
       @click="handleAdd"
-      >Add</a-button
+      >添加</a-button
     >
     <a-table
       :columns="columns"
       :data-source="dataSource"
       :pagination="false"
+      :size="small"
+      :scroll="{ x: 600 }"
       bordered
     >
       <template #bodyCell="{ column, text, record }">
@@ -33,7 +35,7 @@
             <a-input
               v-if="editableData[record.id]"
               v-model:value="editableData[record.id][column.dataIndex]"
-              style="margin: -5px 0"
+              class="my-custom-input"
             />
             <template v-else>
               {{ text }}
@@ -82,51 +84,70 @@ import { cloneDeep } from "lodash-es";
 import { reactive, ref, onMounted, computed } from "vue";
 import Service from "../service";
 
+const setRowClassName = () => {
+  return 'custom-row'; 
+};
+
 const columns = [
   {
     title: "日期",
     dataIndex: "date",
-    width: "10%",
+    width:50,
   },
   {
     title: "货号",
     dataIndex: "number",
-    width: "10%",
+    width:50,
   },
   {
     title: "品名",
     dataIndex: "name",
-    width: "10%",
+    width:50,
+  },
+  {
+    title: "长",
+    dataIndex: "long",
+    width:25,
+  },
+  {
+    title: "宽",
+    dataIndex: "width",
+    width:25,
+  },
+  {
+    title: "高",
+    dataIndex: "hight",
+    width:25,
   },
   {
     title: "件数",
     dataIndex: "piece",
-    width: "10%",
+    width:35,
   },
   {
     title: "立方",
     dataIndex: "cube",
-    width: "10%",
+    width:30,
   },
   {
     title: "重量",
     dataIndex: "weight",
-    width: "10%",
+    width:30,
   },
   {
     title: "垫付款",
     dataIndex: "imprest",
-    width: "10%",
+    width:40,
   },
   {
     title: "包装数",
     dataIndex: "package_number",
-    width: "10%",
+    width:50,
   },
   {
     title: "房间",
     dataIndex: "room",
-    width: "10%",
+    width:50,
   },
   {
     title: "操作",
@@ -204,6 +225,11 @@ const onDelete = (id) => {
 onMounted(() => {
   fetchData();
 });
+
+function customRowClassName(record, index) {
+  return 'row-class';
+}
+
 </script>
 <style scoped>
 .editable-row-operations a {
@@ -218,4 +244,36 @@ onMounted(() => {
   justify-content: flex-end;
   margin-top: 10px;
 }
+
+.row-class {
+  height: 10px; 
+}
+
+/deep/ .ant-table-tbody > tr > td {
+  padding: 2px;
+}
+
+/deep/ .ant-table-thead > tr > th {
+  padding: 2px;
+}
+
+::v-deep .ant-table-tbody > tr > td {
+  font-size: 9px;
+}
+
+::v-deep .ant-table-thead > tr > th  {
+  font-size: 10px;
+}
+
+.my-custom-input {
+  margin: -5px 0;
+  padding: 0;
+  border-radius: 3px;
+  font-size: 10px;
+}
+
+.popconfirm {
+  font-size: 10px;
+}
+
 </style>
