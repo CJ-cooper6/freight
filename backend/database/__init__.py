@@ -1,5 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from .database import db
+import os
 
 
 def init_app(app):
@@ -20,7 +21,7 @@ def _init_sqlalchemy(app, config):
 def get_connection_url(config):
     password = ":" + config["PASSWORD"] if len(config["PASSWORD"]) > 0 else ""
     user = config["USER"]
-    host = config["HOST"]
-    port = config["PORT"]
+    host = os.environ.get('MY_ENV_HOST') or str(config["HOST"]) + ":" + str(config["PORT"])
+
     database = config["DB"]
-    return "mysql+pymysql://{}{}@{}:{}/{}?charset=utf8".format(user, password, host, port, database)
+    return "mysql+pymysql://{}{}@{}/{}?charset=utf8".format(user, password, host, database)

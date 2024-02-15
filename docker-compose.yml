@@ -1,0 +1,6 @@
+version: '1'
+services:
+  web:
+    image: "freight"
+    ports:
+      - "5000:5000"
