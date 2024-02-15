@@ -6,7 +6,7 @@ def get_freight_all():
 
 
 def get_freight_items_by_page(current_page, page_size):
-    return Freight.query.paginate(current_page, page_size, error_out=False)
+    return Freight.query.filter(Freight.deleted == False).paginate(current_page, page_size, error_out=False)
 
 
 def get_freight_by_id(id):

@@ -1,6 +1,17 @@
 <template>
   <div>
-    <a-table :columns="columns" :data-source="dataSource" bordered>
+    <a-button
+      class="editable-add-btn"
+      style="margin-bottom: 8px"
+      @click="handleAdd"
+      >Add</a-button
+    >
+    <a-table
+      :columns="columns"
+      :data-source="dataSource"
+      :pagination="false"
+      bordered
+    >
       <template #bodyCell="{ column, text, record }">
         <template
           v-if="
@@ -46,12 +57,16 @@
         </template>
       </template>
     </a-table>
-    <a-button
-      class="editable-add-btn"
-      style="margin-bottom: 8px"
-      @click="handleAdd"
-      >Add</a-button
-    >
+    <div class="pagination">
+      <a-pagination
+        v-model:current="pagination.current"
+        v-model:pageSize="pagination.pageSize"
+        :total="pagination.total"
+        :showSizeChanger="true"
+        :pageSizeOptions="['5', '10', '20']"
+        @change="fetchData()"
+      />
+    </div>
   </div>
 </template>
 <script setup>
@@ -115,17 +130,18 @@ const data = ref([]);
 const dataSource = ref(data);
 const editableData = reactive({});
 
-const total = ref(0);
 const pagination = reactive({
   pageSize: 10, // 每页显示的数量
-  currentPage: 1, // 当前页码
+  current: 1, // 当前页码
+  total: 0,
 });
 
 const fetchData = () => {
-  Service.getData(pagination.pageSize, pagination.currentPage)
+  Service.getData(pagination.pageSize, pagination.current)
     .then((response) => {
       data.value = response.data.freight_items;
-      total.value = data.total;
+      console.log(data.value.total);
+      pagination.total = response.data.total;
     })
     .catch((error) => {
       console.error("获取失败:", error);
@@ -162,5 +178,11 @@ onMounted(() => {
 }
 .editable-add-btn {
   margin-bottom: 8px;
+}
+
+.pagination {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 10px;
 }
 </style>

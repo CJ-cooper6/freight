@@ -4,13 +4,13 @@ from backend.database import db
 
 class Freight(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    date = db.Column(db.DateTime)  #日期
+    date = db.Column(db.String(255))  #日期
     number = db.Column(db.String(255))  #货号
     name = db.Column(db.String(255))  # 品名
-    piece = db.Column(db.DECIMAL(10, 4))  # 件数
-    cube = db.Column(db.DECIMAL(10, 4))  # 立方
-    weight = db.Column(db.DECIMAL(10, 4))  # 重量
-    imprest = db.Column(db.DECIMAL(10, 4))  # 垫付款
+    piece = db.Column(db.Integer)  # 件数
+    cube = db.Column(db.String(255))  # 立方
+    weight = db.Column(db.String(255))  # 重量
+    imprest = db.Column(db.String(255))  # 垫付款
     package_number = db.Column(db.Integer)  # 包装数
     room = db.Column(db.String(255))  # 房间
     deleted = db.Column(db.Boolean, default=False)
