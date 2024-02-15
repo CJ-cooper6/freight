@@ -1,6 +1,10 @@
 version: '1'
 services:
-  web:
+  frontend:
+    image: "freight-frontend"
+    ports:
+      - "5173:5173"
+  backend:
     image: "freight"
     ports:
       - "5000:5000"
